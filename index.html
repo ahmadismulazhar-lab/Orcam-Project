@@ -95,7 +95,7 @@ banner / shots: image paths inside the repo (e.g. "img/xyz.jpg") or full image U
 direct / mirror: download links. Leave "" to disable the button.
 date: YYYY-MM-DD (used for the Newest sort). id must be unique. */
 const POSTS=[
-{id:1,title:"OrangeFox Recovery R12 UnOfficial",type:"Recovery",HOTFIX:true,device:"Infinix NOTE 40",codename:"X6853",android:"Android 16",by:"@Thepqrtisan",size:"64 MB",date:"2026-10-05",
+{id:1,title:"OrangeFox Recovery R12 UnOfficial",type:"Custom Recovery",hotfix:true,device:"Infinix NOTE 40",codename:"X6853",android:"Android 16",by:"@Thepqrtisan",size:"64 MB",date:"2026-10-05",
 banner:"img/Banner-Reco.jpg",shots:[],direct:"https://t.me/fileheredude/8",mirror:"https://example.com/mirror",
 info:"OrangeFox Recovery UnOfficial R12.",
 changelog:["Enforcing","Fix Bootloop Issue Due To Root","Fix Some Issues","Fix Zygisk Error Log","Fix Flash Zip Failed"],
@@ -115,7 +115,7 @@ const $=id=>document.getElementById(id),byId=i=>POSTS.find(p=>p.id==i);
 const fmt=n=>n>=1000?(n/1000).toFixed(1).replace(".0","")+"k":n;
 const ul=(a,t)=>a&&a.length?`<${t||"ul"}>${a.map(i=>`<li>${i}</li>`).join("")}</${t||"ul"}>`:'<p class="m">–</p>';
 const bn=(p,c)=>`<div class="bn ${c||""}" style="--h:${p.id*53%360}">${p.banner?`<img src="${p.banner}" alt="" loading="lazy" onerror="this.remove()">`:""}</div>`;
-const badge=p=>`<span class="tag ${p.stable?"stable":"pre"}">${p.stable?"STABLE":"PRE-RELEASE"}</span>`;
+const badge=p=>`<span class="tag ${p.stable?"stable":"pre"}">${p.stable?"STABLE":"PRE-RELEASE"}${p.stable?"hotfix":"HOTFIX"}</span>`;
 function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("on"),1800)}
 function renderList(){
 $("chips").innerHTML=TYPES.map(x=>`<button class="chip" data-t="${x}" aria-pressed="${x===type}">${x}</button>`).join("");
