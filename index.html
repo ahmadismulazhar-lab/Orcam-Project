@@ -95,24 +95,14 @@ banner / shots: image paths inside the repo (e.g. "img/xyz.jpg") or full image U
 direct / mirror: download links. Leave "" to disable the button.
 date: YYYY-MM-DD (used for the Newest sort). id must be unique. */
 const POSTS=[
-{id:1,title:"OxygenOS 16.0.10",type:"Port",stable:true,device:"Infinix NOTE 30",codename:"X6833B",android:"Android 16",by:"@your_name",size:"1.9 GB",date:"2026-10-06",
-banner:"",shots:[],direct:"https://example.com/direct",mirror:"https://example.com/mirror",
-info:"Hybrid build with extra audio tuning.",
-changelog:["Initial release","Added Dolby audio"],
-about:"OxygenOS port for the Infinix NOTE 30, smooth for daily use.",
-bugs:["No known bugs yet"],
-guide:["Flash the ROM in recovery","Format data","Reboot system"],
-credits:["@dev_one (base source)","@dev_two (bug fixes)"],votes:7,dl:120},
-{id:2,title:"LunarOS 2.1",type:"Custom ROM",stable:false,device:"Redmi Note 12",codename:"tapas",android:"Android 14",by:"@lunar_dev",size:"1.4 GB",date:"2026-10-03",
-banner:"",shots:[],direct:"https://example.com/lunar",mirror:"",
-info:"Early build, please report bugs.",changelog:["First public beta"],about:"A clean, fast custom ROM.",
-bugs:["Camera video may crash"],guide:["Unlock bootloader","Flash recovery","Flash ROM, then format data"],credits:["@lunar_dev"],votes:128,dl:5400},
-{id:3,title:"Treble GSI Vanilla",type:"GSI",stable:true,device:"Any Treble device",codename:"arm64-ab",android:"Android 15",by:"@gsi_team",size:"980 MB",date:"2026-09-28",
-banner:"",shots:[],direct:"https://example.com/gsi",mirror:"https://example.com/gsi2",
-info:"",changelog:["Security patch update"],about:"Near-stock GSI for Treble devices.",bugs:[],guide:["Flash with fastboot","Wipe data"],credits:["@gsi_team"],votes:210,dl:12800},
-{id:4,title:"Ember Kernel r14",type:"Custom Kernel",stable:true,device:"Galaxy A52",codename:"a52q",android:"Android 13",by:"@kernel_dev",size:"24 MB",date:"2026-10-05",
-banner:"",shots:[],direct:"https://example.com/kernel",mirror:"",
-info:"",changelog:["Better battery life"],about:"Tuned for smooth scrolling.",bugs:[],guide:["Flash zip in recovery"],credits:["@kernel_dev"],votes:64,dl:2100}
+{id:1,title:"OxygenOS 16.0.10",type:"Recovery",HOTFIX:true,device:"Infinix NOTE 40",codename:"X6853",android:"Android 16",by:"@Thepqrtisan",size:"64 MB",date:"2026-10-05",
+banner:"img/Banner-Reco.jpg",shots:[],direct:"https://t.me/fileheredude/8",mirror:"https://example.com/mirror",
+info:"OrangeFox Recovery UnOfficial R12.",
+changelog:["Enforcing","Fix Bootloop Issue Due To Root","Fix Some Issues","Fix Zygisk Error Log","Fix Flash Zip Failed"],
+about:"",
+bugs:["Maybe OTG"],
+guide:["Open Fashboot/Boot Into Booloader","Command fastboot flash vendor_boot (masukan file orfox nya)","Reboot system"],
+credits:["Andrikurn For Original Base Device Tree","Ardiandideyashidiq For Initial Bringup & Ported Device Tree","Ahsanihlwn & RennsProject For Fork Base Tree & Improvment","Ahsanihlwn For Fixed And UpStream Updates"],votes:7,dl:120},
 ];
 /* ===== END DATA ===== */
 /* Put your donation link here, e.g. "https://sociabuzz.com/yourname". Leave "" to show a reminder instead. */
