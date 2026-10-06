@@ -90,7 +90,7 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
 <script>
 /* ===== DATA: edit here to add, change or remove posts =====
 Each post is one {...} block, separated by commas. Copy a block to add a post.
-type: Port | Custom ROM | GSI | Custom Kernel | Custom Recovery
+type: Port | Custom ROM | FLASHABLE | Custom Kernel | Custom Recovery
 stable: true = Stable, false = Pre-release
 banner / shots: image paths inside the repo (e.g. "img/xyz.jpg") or full image URLs. Leave "" or [] if none.
 direct / mirror: download links. Leave "" to disable the button.
@@ -116,7 +116,7 @@ credits:["Andrikurn For Original Base Device Tree","Ardiandideyashidiq For Initi
 /* ===== END DATA ===== */
 /* Put your donation link here, e.g. "https://saweria.co/saipulikhsan". Leave "" to show a reminder instead. */
 const DONATE_URL="https://saweria.co/saipulikhsan";
-const TYPES=["All types","Port","Custom ROM","GSI","Custom Kernel","Custom Recovery"];
+const TYPES=["All types","Port","Custom ROM","Flashable","Custom Kernel","Custom Recovery"];
 let sort="new",type="All types",query="",cur=null,dtab="Info";
 let voted=new Set();try{voted=new Set(JSON.parse(localStorage.getItem("votes")||"[]"))}catch(e){}
 const dis=new Set(),FB={};
