@@ -115,7 +115,7 @@ const $=id=>document.getElementById(id),byId=i=>POSTS.find(p=>p.id==i);
 const fmt=n=>n>=1000?(n/1000).toFixed(1).replace(".0","")+"k":n;
 const ul=(a,t)=>a&&a.length?`<${t||"ul"}>${a.map(i=>`<li>${i}</li>`).join("")}</${t||"ul"}>`:'<p class="m">–</p>';
 const bn=(p,c)=>`<div class="bn ${c||""}" style="--h:${p.id*53%360}">${p.banner?`<img src="${p.banner}" alt="" loading="lazy" onerror="this.remove()">`:""}</div>`;
-const badge=p=>`<span class="tag ${p.stable?"stable":"pre"}">${p.stable?"STABLE":"PRE-RELEASE"}${p.stable?"hotfix":"HOTFIX"}</span>`;
+const badge=p=>`<span class="tag ${p.stable?"stable":"pre"}">${p.stable?"STABLE":"RELEASE"}</span>`;
 function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("on"),1800)}
 function renderList(){
 $("chips").innerHTML=TYPES.map(x=>`<button class="chip" data-t="${x}" aria-pressed="${x===type}">${x}</button>`).join("");
