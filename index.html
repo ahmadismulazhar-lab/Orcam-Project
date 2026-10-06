@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Orcam Project Base – Android ROM Hub</title>
+<title>Resonance Base – Android ROM Hub</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap">
 <style>
 :root{--bg:#0a0d12;--s:#121821;--s2:#1a222d;--line:#26313f;--text:#e8edf2;--mut:#8b98a8;--cy:#5fe0d0;--gold:#e0c07a;--ink:#06231f;color-scheme:dark;
@@ -68,7 +68,7 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
 </head>
 <body>
 <div class="wrap">
-<div class="top"><div class="brand"><i></i>ORCAM PROJECT BASE</div><a id="donate" class="dn" href="#" target="_blank" rel="noopener">Donate</a></div>
+<div class="top"><div class="brand"><i></i>RESONANCE BASE</div><a id="donate" class="dn" href="#" target="_blank" rel="noopener">Donate</a></div>
 <section id="list">
 <h1>Ports, ROMs and kernels</h1>
 <p class="lead">Browse community builds, vote for the ones that work, and download them to flash.</p>
@@ -82,10 +82,11 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
 <div class="grid" id="grid"></div>
 </section>
 <section id="detail" hidden></section>
-<footer>Orcam Project Base is a community project. Flash at your own risk.</footer>
+<footer>Resonance Base is a community project. Flash at your own risk.</footer>
 </div>
 <div id="toast" role="status"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.js"></script>
 <script>
 /* ===== DATA: edit here to add, change or remove posts =====
 Each post is one {...} block, separated by commas. Copy a block to add a post.
@@ -95,14 +96,24 @@ banner / shots: image paths inside the repo (e.g. "img/xyz.jpg") or full image U
 direct / mirror: download links. Leave "" to disable the button.
 date: YYYY-MM-DD (used for the Newest sort). id must be unique. */
 const POSTS=[
-{id:1,title:"OrangeFox Recovery R12 UnOfficial",type:"Custom Recovery",hotfix:true,device:"Infinix NOTE 40",codename:"X6853",android:"Android 16",by:"@Thepqrtisan",size:"64 MB",date:"2026-10-05",
-banner:"img/Banner-Reco.jpg",shots:[],direct:"https://t.me/fileheredude/8",mirror:"https://example.com/mirror",
-info:"OrangeFox Recovery UnOfficial R12.",
-changelog:["Enforcing","Fix Bootloop Issue Due To Root","Fix Some Issues","Fix Zygisk Error Log","Fix Flash Zip Failed"],
-about:"",
-bugs:["Maybe OTG"],
-guide:["Open Fashboot/Boot Into Booloader","Command fastboot flash vendor_boot (masukan file orfox nya)","Reboot system"],
-credits:["Andrikurn For Original Base Device Tree","Ardiandideyashidiq For Initial Bringup & Ported Device Tree","Ahsanihlwn & RennsProject For Fork Base Tree & Improvment","Ahsanihlwn For Fixed And UpStream Updates"],votes:7,dl:120},
+{id:1,title:"OxygenOS 16.0.10",type:"Port",stable:true,device:"Infinix NOTE 30",codename:"X6833B",android:"Android 16",by:"@your_name",size:"1.9 GB",date:"2026-10-06",
+banner:"",shots:[],direct:"https://example.com/direct",mirror:"https://example.com/mirror",
+info:"Hybrid build with extra audio tuning.",
+changelog:["Initial release","Added Dolby audio"],
+about:"OxygenOS port for the Infinix NOTE 30, smooth for daily use.",
+bugs:["No known bugs yet"],
+guide:["Flash the ROM in recovery","Format data","Reboot system"],
+credits:["@dev_one (base source)","@dev_two (bug fixes)"],votes:7,dl:120},
+{id:2,title:"LunarOS 2.1",type:"Custom ROM",stable:false,device:"Redmi Note 12",codename:"tapas",android:"Android 14",by:"@lunar_dev",size:"1.4 GB",date:"2026-10-03",
+banner:"",shots:[],direct:"https://example.com/lunar",mirror:"",
+info:"Early build, please report bugs.",changelog:["First public beta"],about:"A clean, fast custom ROM.",
+bugs:["Camera video may crash"],guide:["Unlock bootloader","Flash recovery","Flash ROM, then format data"],credits:["@lunar_dev"],votes:128,dl:5400},
+{id:3,title:"Treble GSI Vanilla",type:"GSI",stable:true,device:"Any Treble device",codename:"arm64-ab",android:"Android 15",by:"@gsi_team",size:"980 MB",date:"2026-09-28",
+banner:"",shots:[],direct:"https://example.com/gsi",mirror:"https://example.com/gsi2",
+info:"",changelog:["Security patch update"],about:"Near-stock GSI for Treble devices.",bugs:[],guide:["Flash with fastboot","Wipe data"],credits:["@gsi_team"],votes:210,dl:12800},
+{id:4,title:"Ember Kernel r14",type:"Custom Kernel",stable:true,device:"Galaxy A52",codename:"a52q",android:"Android 13",by:"@kernel_dev",size:"24 MB",date:"2026-10-05",
+banner:"",shots:[],direct:"https://example.com/kernel",mirror:"",
+info:"",changelog:["Better battery life"],about:"Tuned for smooth scrolling.",bugs:[],guide:["Flash zip in recovery"],credits:["@kernel_dev"],votes:64,dl:2100}
 ];
 /* ===== END DATA ===== */
 /* Put your donation link here, e.g. "https://sociabuzz.com/yourname". Leave "" to show a reminder instead. */
@@ -113,20 +124,31 @@ let voted=new Set();try{voted=new Set(JSON.parse(localStorage.getItem("votes")||
 const dis=new Set(),FB={};
 const $=id=>document.getElementById(id),byId=i=>POSTS.find(p=>p.id==i);
 const fmt=n=>n>=1000?(n/1000).toFixed(1).replace(".0","")+"k":n;
+/* ===== LIVE COUNTS (Supabase) ===== */
+const SB_URL="https://htzhffomjsktomhfqeye.supabase.co",SB_KEY="sb_publishable_qXwo12L3GuYgJtswc3uhvA_la8S_xl2";
+let sb=null;try{sb=window.supabase.createClient(SB_URL,SB_KEY)}catch(e){}
+const S={};
+const vc=p=>p.votes+((S[p.id]||{}).votes||0),dc=p=>p.dl+((S[p.id]||{}).downloads||0);
+function refresh(){if(document.activeElement&&document.activeElement.id==="fb")return;cur?showDetail(cur):renderList()}
+function bump(id,col,d){const r=S[id]=S[id]||{votes:0,downloads:0};r[col]=Math.max(0,r[col]+d);
+if(sb)sb.rpc("bump",{pid:id,col:col,d:d}).then(()=>{},()=>{})}
+function initLive(){if(!sb)return;
+sb.from("stats").select("*").then(r=>{(r.data||[]).forEach(x=>{S[x.post_id]=x});refresh()},()=>{});
+sb.channel("stats-live").on("postgres_changes",{event:"*",schema:"public",table:"stats"},pl=>{const x=pl.new;if(x&&x.post_id!=null){S[x.post_id]=x;refresh()}}).subscribe()}
 const ul=(a,t)=>a&&a.length?`<${t||"ul"}>${a.map(i=>`<li>${i}</li>`).join("")}</${t||"ul"}>`:'<p class="m">–</p>';
 const bn=(p,c)=>`<div class="bn ${c||""}" style="--h:${p.id*53%360}">${p.banner?`<img src="${p.banner}" alt="" loading="lazy" onerror="this.remove()">`:""}</div>`;
-const badge=p=>`<span class="tag ${p.stable?"stable":"pre"}">${p.stable?"STABLE":"RELEASE"}</span>`;
+const badge=p=>`<span class="tag ${p.stable?"stable":"pre"}">${p.stable?"STABLE":"PRE-RELEASE"}</span>`;
 function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("on"),1800)}
 function renderList(){
 $("chips").innerHTML=TYPES.map(x=>`<button class="chip" data-t="${x}" aria-pressed="${x===type}">${x}</button>`).join("");
 const l=POSTS.filter(p=>(type==="All types"||p.type===type)&&[p.title,p.device,p.codename].join(" ").toLowerCase().includes(query.toLowerCase()));
-l.sort((a,b)=>sort==="pop"?b.votes-a.votes:sort==="dl"?b.dl-a.dl:b.date.localeCompare(a.date));
+l.sort((a,b)=>sort==="pop"?vc(b)-vc(a):sort==="dl"?dc(b)-dc(a):b.date.localeCompare(a.date));
 $("count").textContent=l.length+(l.length===1?" post":" posts")+" available";
 $("grid").innerHTML=l.length?l.map(p=>{const on=voted.has(p.id);return `<article class="card cut">${bn(p)}<div class="bd">
 <div class="badges"><span class="tag">${p.type}</span>${badge(p)}</div>
 <h3><a href="#/post/${p.id}">${p.title}</a></h3>
-<p class="m">${p.device} · ${p.android} · ${p.size||""}</p><p class="m">${fmt(p.dl)} downloads</p>
-<div class="row"><button class="vote" data-v="${p.id}" aria-pressed="${on}">▲ ${p.votes+(on?1:0)}</button><a class="go" href="#/post/${p.id}">View</a></div></div></article>`}).join(""):'<p class="empty">No posts match. Try another type or clear the search.</p>'}
+<p class="m">${p.device} · ${p.android} · ${p.size||""}</p><p class="m">${fmt(dc(p))} downloads</p>
+<div class="row"><button class="vote" data-v="${p.id}" aria-pressed="${on}">▲ ${vc(p)}</button><a class="go" href="#/post/${p.id}">View</a></div></div></article>`}).join(""):'<p class="empty">No posts match. Try another type or clear the search.</p>'}
 function dlBtn(p,u,label,c){return u?`<a class="dl ${c||""}" data-d="${p.id}" href="${u}" target="_blank" rel="noopener">${label}</a>`:`<span class="dl off">${label} (not available)</span>`}
 function showDetail(p){cur=p;const on=voted.has(p.id),x=dis.has(p.id),T=["Info","Changelog","Screenshots","Feedback","Disclaimer"];let b="";
 if(dtab==="Info")b=`${p.info?`<p class="m">${p.info}</p>`:""}<h4>PORT INFO</h4><dl class="kv"><b>Device</b><span>${p.device}</span><b>Codename</b><span>${p.codename||"–"}</span><b>Android</b><span>${p.android}</span><b>Ported by</b><span>${p.by||"–"}</span><b>Size</b><span>${p.size||"–"}</span></dl>
@@ -138,7 +160,7 @@ else if(dtab==="Feedback"){const c=FB[p.id]||[];b=`<h4>FEEDBACK</h4>${c.map(()=>
 else b='<h4>DISCLAIMER</h4><p class="m">Flash at your own risk. Back up your data first. The maintainers are not responsible for bricked devices or lost data.</p>';
 $("detail").innerHTML=`<a class="back" href="#/">← Back to all posts</a>${bn(p,"big cut")}<div class="badges"><span class="tag">${p.type}</span>${badge(p)}</div>
 <h1 class="dt">${p.title}</h1><p class="m">${p.device} · ${p.codename||""} · ${p.android}</p><p class="m">Ported by ${p.by||"–"}</p>
-<div class="acts"><button class="ghost" data-copy>Copy link</button><button class="vote" data-v="${p.id}" aria-pressed="${on}">▲ ${p.votes+(on?1:0)}</button><button class="vote" data-x="${p.id}" aria-pressed="${x}">▼ ${x?"Disliked":"Dislike"}</button></div>
+<div class="acts"><button class="ghost" data-copy>Copy link</button><button class="vote" data-v="${p.id}" aria-pressed="${on}">▲ ${vc(p)}</button><button class="vote" data-x="${p.id}" aria-pressed="${x}">▼ ${x?"Disliked":"Dislike"}</button></div>
 <div class="tabs" role="tablist">${T.map(t=>`<button class="tab" role="tab" data-dt="${t}" aria-selected="${t===dtab}">${t}</button>`).join("")}</div><div class="pane">${b}</div>`;
 (FB[p.id]||[]).forEach((t,i)=>{$("detail").querySelectorAll(".cm")[i].textContent=t})}
 function route(){const m=location.hash.match(/^#\/post\/(\d+)/),p=m&&byId(m[1]);
@@ -146,11 +168,11 @@ $("list").hidden=!!p;$("detail").hidden=!p;
 if(p){dtab="Info";showDetail(p)}else{cur=null;renderList()}scrollTo(0,0)}
 document.addEventListener("click",e=>{
 if(e.target.closest("#donate")&&!DONATE_URL){e.preventDefault();toast("Set DONATE_URL in index.html first");return}
-const a=e.target.closest("a[data-d]");if(a){byId(a.dataset.d).dl++;return}
+const a=e.target.closest("a[data-d]");if(a){bump(+a.dataset.d,"downloads",1);return}
 const c=e.target.closest("button");if(!c)return;const d=c.dataset;
 if(d.s){sort=d.s;document.querySelectorAll("#list .tab").forEach(x=>x.setAttribute("aria-selected",x===c));renderList()}
 else if(d.t){type=d.t;renderList()}
-else if(d.v){const i=+d.v;voted.has(i)?voted.delete(i):voted.add(i);try{localStorage.setItem("votes",JSON.stringify([...voted]))}catch(_){}cur?showDetail(cur):renderList()}
+else if(d.v){const i=+d.v;const was=voted.has(i);was?voted.delete(i):voted.add(i);try{localStorage.setItem("votes",JSON.stringify([...voted]))}catch(_){}bump(i,"votes",was?-1:1);cur?showDetail(cur):renderList()}
 else if(d.x){const i=+d.x;dis.has(i)?dis.delete(i):dis.add(i);showDetail(cur)}
 else if(d.dt){dtab=d.dt;showDetail(cur)}
 else if(d.fb){const t=$("fb").value.trim();if(t){(FB[cur.id]=FB[cur.id]||[]).push(t);showDetail(cur)}}
@@ -159,6 +181,7 @@ $("q").addEventListener("input",e=>{query=e.target.value;renderList()});
 addEventListener("hashchange",route);
 if(DONATE_URL)$("donate").href=DONATE_URL;
 route();
+initLive();
 </script>
 </body>
 </html>
