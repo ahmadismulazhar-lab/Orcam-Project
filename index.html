@@ -162,7 +162,7 @@ if(dtab==="Info")b=`${p.info?`<p class="m">${p.info}</p>`:""}<h4>PORT INFO</h4><
 <h4>DOWNLOAD</h4><div class="acts">${dlBtn(p,p.direct,"Direct download")}${dlBtn(p,p.mirror,"Mirror","alt")}</div>`;
 else if(dtab==="Changelog")b=`<h4>CHANGELOG</h4>${ul(p.changelog)}`;
 else if(dtab==="Screenshots")b=`<h4>SCREENSHOTS</h4>${p.shots&&p.shots.length?`<div class="shots">${p.shots.map(s=>`<a href="${s}" target="_blank" rel="noopener"><img src="${s}" alt="Screenshot" loading="lazy"></a>`).join("")}</div>`:'<p class="m">No screenshots yet.</p>'}`;
-else if(dtab==="Feedback"){const c=FB[p.id]||[];b=`<h4>FEEDBACK</h4>${c.map(()=>'<div class="cm"></div>').join("")||'<p class="m">No feedback yet. Share how this build works on your device.</p>'}<textarea class="in" id="fb" placeholder="Write your feedback" aria-label="Feedback"></textarea><button class="go" data-fb>Send feedback</button>`}
+/*else if(dtab==="Feedback"){const c=FB[p.id]||[];b=`<h4>FEEDBACK</h4>${c.map(()=>'<div class="cm"></div>').join("")||'<p class="m">No feedback yet. Share how this build works on your device.</p>'}<textarea class="in" id="fb" placeholder="Write your feedback" aria-label="Feedback"></textarea><button class="go" data-fb>Send feedback</button>`}*/
 else b='<h4>DISCLAIMER</h4><p class="m">Flash at your own risk. Back up your data first. The maintainers are not responsible for bricked devices or lost data.</p>';
 $("detail").innerHTML=`<a class="back" href="#/">← Back to all posts</a>${bn(p,"big cut")}<div class="badges"><span class="tag">${p.type}</span>${badge(p)}</div>
 <h1 class="dt">${p.title}</h1><p class="m">${p.device} · ${p.codename||""} · ${p.android}</p><p class="m">Ported by ${p.by||"–"}</p>
