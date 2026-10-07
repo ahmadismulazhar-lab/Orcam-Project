@@ -156,7 +156,7 @@ $("grid").innerHTML=l.length?l.map(p=>{const on=voted.has(p.id);return `<article
 <p class="m">${p.device} · ${p.android} · ${p.size||""}</p><p class="m">${fmt(dc(p))} downloads</p>
 <div class="row"><button class="vote" data-v="${p.id}" aria-pressed="${on}">▲ ${vc(p)}</button><a class="go" href="#/post/${p.id}">View</a></div></div></article>`}).join(""):'<p class="empty">No posts match. Try another type or clear the search.</p>'}
 function dlBtn(p,u,label,c){return u?`<a class="dl ${c||""}" data-d="${p.id}" href="${u}" target="_blank" rel="noopener">${label}</a>`:`<span class="dl off">${label} (not available)</span>`}
-function showDetail(p){cur=p;const on=voted.has(p.id),x=dis.has(p.id),T=["Info","Changelog","Screenshots","Feedback","Disclaimer"];let b="";
+function showDetail(p){cur=p;const on=voted.has(p.id),x=dis.has(p.id),T=["Info","Changelog","Screenshots","Disclaimer"];let b="";
 if(dtab==="Info")b=`${p.info?`<p class="m">${p.info}</p>`:""}<h4>PORT INFO</h4><dl class="kv"><b>Device</b><span>${p.device}</span><b>Codename</b><span>${p.codename||"–"}</span><b>Android</b><span>${p.android}</span><b>Ported by</b><span>${p.by||"–"}</span><b>Size</b><span>${p.size||"–"}</span></dl>
 <h4>ABOUT</h4><p class="m">${p.about||"–"}</p><h4>KNOWN BUGS</h4>${ul(p.bugs)}<h4>INSTALL GUIDE</h4>${ul(p.guide,"ol")}<h4>CREDITS</h4>${ul(p.credits)}
 <h4>DOWNLOAD</h4><div class="acts">${dlBtn(p,p.direct,"Direct download")}${dlBtn(p,p.mirror,"Mirror","alt")}</div>`;
